@@ -5,6 +5,8 @@ class PaginaInternet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Ainda não há nada aqui :('));
+    return Center(
+      child: Text('Página de Internet'),
+    );
   }
 }

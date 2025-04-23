@@ -26,15 +26,48 @@ class _PaginaInicialState extends State<PaginaInicial> {
     });
   }
 
+  void _adicionarReceita() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Adicionar Receita"),
+          content: TextField(
+            decoration: const InputDecoration(
+              hintText: "Digite o nome da receita",
+            ),
+            autofocus: true,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Salvar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         centerTitle: true,
         title: const Text("Receitas"),
         backgroundColor: Colors.green,
-      ),
+      ),*/
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: _paginas[_paginaSelecionada],
+      backgroundColor: const Color.fromARGB(255, 241, 236, 236),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _paginaSelecionada,
@@ -49,6 +82,16 @@ class _PaginaInicialState extends State<PaginaInicial> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),
+      floatingActionButton: Transform.translate(
+        offset: const Offset(0, 40),
+        child: FloatingActionButton(
+          onPressed: _adicionarReceita,
+          backgroundColor: Colors.grey,
+          shape: CircleBorder(),
+
+          child: const Icon(Icons.add, color: Colors.white),
+        ),
+      ),
     );
   }
 }
@@ -58,6 +101,6 @@ class PaginaInicialScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Ainda não há nada aqui :('));
+    return Center(child: Text('Página Inicial'));
   }
 }

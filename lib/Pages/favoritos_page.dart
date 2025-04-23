@@ -6,7 +6,7 @@ class PaginaFavoritos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Ainda não há nada aqui :('),
+      child: Text('Página de Favoritos'),
     );
   }
 }
