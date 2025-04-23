@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aplicativo_receitas/pagina_inicial.dart';
+import 'package:aplicativo_receitas/Pages/pagina_inicial.dart';
 
 class MeuAplicativo extends StatelessWidget {
   const MeuAplicativo({super.key});
@@ -10,7 +10,7 @@ class MeuAplicativo extends StatelessWidget {
       title: "Receitas",
       debugShowCheckedModeBanner: false,
 
-      home: Paginainicial(),
+      home: PaginaInicial(),
     );
   }
 }
