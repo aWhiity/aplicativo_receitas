@@ -5,8 +5,6 @@ class PaginaPerfil extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Página de Perfil'),
-    );
+    return Center(child: Text('Ainda não há nada aqui :('));
   }
 }

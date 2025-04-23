@@ -58,6 +58,6 @@ class PaginaInicialScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Página Inicial'));
+    return Center(child: Text('Ainda não há nada aqui :('));
   }
 }
