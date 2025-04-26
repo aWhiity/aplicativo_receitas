@@ -1,6 +1,11 @@
 class RecipeIngredient {
-  final String name;
-  final double quantity;
+  final int id;
+  String name;
+  String quantity;
 
-  RecipeIngredient({required this.name, required this.quantity});
+  RecipeIngredient({
+    required this.id,
+    required this.name,
+    required this.quantity,
+  });
 }
