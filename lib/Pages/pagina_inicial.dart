@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'favoritos_page.dart';
 import 'internet_page.dart';
 import 'perfil_page.dart';
+import 'nova_receita_page.dart';
 
 class PaginaInicial extends StatefulWidget {
   const PaginaInicial({super.key});
@@ -27,44 +28,15 @@ class _PaginaInicialState extends State<PaginaInicial> {
   }
 
   void _adicionarReceita() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Adicionar Receita"),
-          content: TextField(
-            decoration: const InputDecoration(
-              hintText: "Digite o nome da receita",
-            ),
-            autofocus: true,
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Salvar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PaginaNovaReceita()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Receitas"),
-        backgroundColor: Colors.green,
-      ),*/
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: _paginas[_paginaSelecionada],
       backgroundColor: const Color.fromARGB(255, 241, 236, 236),
@@ -83,7 +55,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
         ],
       ),
       floatingActionButton: Transform.translate(
-        offset: const Offset(0, 40),
+        offset: const Offset(0, 0),
         child: FloatingActionButton(
           onPressed: _adicionarReceita,
           backgroundColor: Colors.grey,
