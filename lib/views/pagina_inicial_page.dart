@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'favoritos_page.dart';
 import 'internet_page.dart';
 import 'perfil_page.dart';
@@ -27,14 +28,19 @@ class _PaginaInicialState extends State<PaginaInicial> {
   void _adicionarReceita() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const AddRecipeView()),
+      MaterialPageRoute(
+        builder:
+            (context) => AddRecipeView(
+              recipesRepository: context.watch<RecipesRepositoryMemory>(),
+            ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> _paginas = [
-      ReceitasPage(receitas: _receitas),
+      ReceitasPage(),
       PaginaFavoritos(),
       PaginaInternet(),
       PaginaPerfil(),

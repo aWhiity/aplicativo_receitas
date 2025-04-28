@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AddRecipeView extends StatefulWidget {
-  //final RecipesRepository recipesRepository;
+  final RecipesRepository recipesRepository;
 
-  const AddRecipeView({super.key, /*required this.recipesRepository*/});
+  const AddRecipeView({super.key, required this.recipesRepository});
 
   @override
   State<AddRecipeView> createState() => _AddRecipeViewState();
