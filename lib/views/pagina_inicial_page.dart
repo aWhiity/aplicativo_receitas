@@ -26,7 +26,6 @@ class _PaginaInicialState extends State<PaginaInicial> {
   }
 
   void _adicionarReceita() {
-    //print('adicionar receita');
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -48,6 +47,19 @@ class _PaginaInicialState extends State<PaginaInicial> {
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        leading: Icon(Icons.book_outlined, color: Colors.white),
+        title: Text('Receitas', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.grey,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search, color: Colors.white),
+            onPressed: () {
+              //ação
+            },
+          ),
+        ],
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: _paginas[_paginaSelecionada],
       backgroundColor: const Color.fromARGB(255, 241, 236, 236),

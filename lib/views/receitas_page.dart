@@ -22,6 +22,7 @@ class ReceitasPage extends StatelessWidget {
           return Card(
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ListTile(
+              leading: Image.asset(recipe.imagePath),
               title: Text(recipe.name),
               subtitle: Text(recipe.desc ?? ''),
               trailing: Text(
@@ -43,6 +44,6 @@ String formatDuration(Duration duration) {
   if (hours > 0) {
     return '${hours}h ${minutes}m';
   } else {
-    return '${minutes}';
+    return '$minutes';
   }
 }
