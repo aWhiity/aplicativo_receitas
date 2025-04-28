@@ -37,7 +37,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
             Text("Ingrediente ${ingredients.length + 1}:"),
             Row(
               children: [
-                Container(
+                SizedBox(
                   width: 275,
                   height: 35,
                   child: TextField(
@@ -59,7 +59,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
               ],
             ),
             Text("Quantidade:"),
-            Container(
+            SizedBox(
               width: 170,
               height: 35,
               child: TextField(
@@ -102,7 +102,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
       backgroundColor: Color(0xFFe2e2e2),
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => {},
+          onPressed: () => {Navigator.of(context).pop()},
           icon: Icon(Icons.arrow_back_ios_new),
         ),
         title: Text(
@@ -149,7 +149,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Nome da Receita:'),
-                      Container(
+                      SizedBox(
                         width: 245,
                         height: 35,
                         child: TextField(
@@ -186,7 +186,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
               ),
               SizedBox(height: 12),
               Text('Descrição:'),
-              Container(
+              SizedBox(
                 width: 500,
                 height: 120,
                 child: TextField(
@@ -209,7 +209,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 45,
                     height: 45,
                     child: TextField(
@@ -237,7 +237,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(width: 5),
-                  Container(
+                  SizedBox(
                     width: 45,
                     height: 45,
                     child: TextField(
@@ -266,7 +266,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                 'Ingredientes',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              Container(
+              SizedBox(
                 width: 540,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
