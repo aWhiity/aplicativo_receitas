@@ -26,12 +26,13 @@ class _PaginaInicialState extends State<PaginaInicial> {
   }
 
   void _adicionarReceita() {
+    //print('adicionar receita');
     Navigator.push(
       context,
       MaterialPageRoute(
         builder:
             (context) => AddRecipeView(
-              recipesRepository: context.watch<RecipesRepositoryMemory>(),
+              recipesRepository: context.watch<RecipesRepository>(),
             ),
       ),
     );
