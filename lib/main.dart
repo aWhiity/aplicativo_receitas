@@ -1,13 +1,14 @@
-import 'package:aplicativo_receitas/app.dart';
-import 'package:aplicativo_receitas/repositories/recipes_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:aplicativo_receitas/meu_aplicatico.dart';
 import 'package:provider/provider.dart';
+import 'repositories/recipes_repository.dart';
 
-main() {
+void main() {
   runApp(
-    ChangeNotifierProvider<RecipesRepositoryMemory>(
+    ChangeNotifierProvider<RecipesRepository>(
       create: (context) => RecipesRepositoryMemory(),
-      child: App(),
+      child: MeuAplicativo(),
     ),
   );
 }
+
