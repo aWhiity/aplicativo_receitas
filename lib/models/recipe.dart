@@ -1,15 +1,19 @@
+import 'package:aplicativo_receitas/models/recipe_ingredient.dart';
+
 class Recipe {
-  final String id;
-  final String nome;
-  String desc;
-  Duration tempoPreparacao;
+  final String id; //rever o tipo do id
+  String name;
+  List<RecipeIngredient> ingredients;
+  String? desc;
+  Duration preparationTime;
   String imagePath;
 
   Recipe({
     required this.id,
-    required this.nome,
+    required this.name,
+    required this.ingredients,
     required this.desc,
-    required this.tempoPreparacao,
+    required this.preparationTime,
     required this.imagePath,
   });
 }

@@ -1,13 +1,11 @@
-
-
 class RecipeIngredient {
-  final String nome;
-  final double quantidade;
-  //final Unit unit;
+  final int id;
+  String name;
+  String quantity;
 
   RecipeIngredient({
-    required this.nome,
-    required this.quantidade,
-    //required this.unit,
+    required this.id,
+    required this.name,
+    required this.quantity,
   });
 }
