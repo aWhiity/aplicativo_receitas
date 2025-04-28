@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'favoritos_page.dart';
 import 'internet_page.dart';
 import 'perfil_page.dart';
-import 'nova_receita_page.dart';
+import 'add_recipe.dart';
 import 'receitas_page.dart';
+import '../repositories/recipes_repository.dart';
 
 class PaginaInicial extends StatefulWidget {
   const PaginaInicial({super.key});
@@ -13,14 +14,9 @@ class PaginaInicial extends StatefulWidget {
 }
 
 class _PaginaInicialState extends State<PaginaInicial> {
-  int _paginaSelecionada = 0;
+  final List<Map<String, String>> _receitas = [];
 
-  final List<Widget> _paginas = const [
-    ReceitasPage(),
-    PaginaFavoritos(),
-    PaginaInternet(),
-    PaginaPerfil(),
-  ];
+  int _paginaSelecionada = 0;
 
   void _mudarPagina(int index) {
     setState(() {
@@ -31,12 +27,19 @@ class _PaginaInicialState extends State<PaginaInicial> {
   void _adicionarReceita() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const PaginaNovaReceita()),
+      MaterialPageRoute(builder: (context) => const AddRecipeView()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _paginas = [
+      ReceitasPage(receitas: _receitas),
+      PaginaFavoritos(),
+      PaginaInternet(),
+      PaginaPerfil(),
+    ];
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: _paginas[_paginaSelecionada],
