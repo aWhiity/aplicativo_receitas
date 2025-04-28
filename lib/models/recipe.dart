@@ -1,15 +1,15 @@
 class Recipe {
   final String id;
-  final String name;
+  final String nome;
   String desc;
-  Duration preparationTime;
+  Duration tempoPreparacao;
   String imagePath;
 
   Recipe({
     required this.id,
-    required this.name,
+    required this.nome,
     required this.desc,
-    required this.preparationTime,
+    required this.tempoPreparacao,
     required this.imagePath,
   });
 }

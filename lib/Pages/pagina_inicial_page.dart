@@ -3,6 +3,7 @@ import 'favoritos_page.dart';
 import 'internet_page.dart';
 import 'perfil_page.dart';
 import 'nova_receita_page.dart';
+import 'receitas_page.dart';
 
 class PaginaInicial extends StatefulWidget {
   const PaginaInicial({super.key});
@@ -15,7 +16,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
   int _paginaSelecionada = 0;
 
   final List<Widget> _paginas = const [
-    PaginaInicialScreen(),
+    ReceitasPage(),
     PaginaFavoritos(),
     PaginaInternet(),
     PaginaPerfil(),
@@ -65,14 +66,5 @@ class _PaginaInicialState extends State<PaginaInicial> {
         ),
       ),
     );
-  }
-}
-
-class PaginaInicialScreen extends StatelessWidget {
-  const PaginaInicialScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Página Inicial'));
   }
 }

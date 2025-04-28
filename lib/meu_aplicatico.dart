@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aplicativo_receitas/Pages/pagina_inicial.dart';
+import 'package:aplicativo_receitas/Pages/pagina_inicial_page.dart   ';
 
 class MeuAplicativo extends StatelessWidget {
   const MeuAplicativo({super.key});
