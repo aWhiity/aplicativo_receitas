@@ -26,18 +26,17 @@ class _AddRecipeViewState extends State<AddRecipeView> {
 
   final formKey = GlobalKey<FormState>();
 
+  List<TextEditingController> ingredientNameControllers = [];
+  List<TextEditingController> quantityControllers = [];
+
   List<RecipeIngredient> ingredients = [];
   List<Widget> ingredientWidgets = [];
   //List<TextEditingController> _ingredientsController =
   //new List<TextEditingController>();
 
   void addNewIngredientWidget() {
-    TextEditingController ingredientController = TextEditingController();
-    TextEditingController quantityController = TextEditingController();
-    RecipeIngredient newIngredient = RecipeIngredient(
-      name: ingredientController.text,
-      quantity: quantityController.text,
-    );
+    final ingredientController = TextEditingController();
+    final quantityController = TextEditingController();
 
     setState(() {
       ingredientWidgets.add(
@@ -62,9 +61,11 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                   ),
                 ),
                 IconButton(
-                  onPressed:
-                      () =>
-                          removeIngredient(ingredients.indexOf(newIngredient)),
+                  onPressed:() {
+                    removeIngredient(
+                      ingredientNameControllers.indexOf(ingredientController),
+                    );
+                  },
                   icon: Icon(
                     Icons.delete_forever_outlined,
                     color: Color(0xFFb85a34),
@@ -100,13 +101,15 @@ class _AddRecipeViewState extends State<AddRecipeView> {
       );
     });
 
-    ingredients.add(newIngredient);
+    ingredientNameControllers.add(ingredientController);
+    quantityControllers.add(quantityController);
   }
 
   void removeIngredient(int index) {
     setState(() {
       ingredientWidgets.removeAt(index);
-      ingredients.removeAt(index);
+      ingredientNameControllers.removeAt(index);
+      quantityControllers.removeAt(index);
     });
   }
 
@@ -114,22 +117,39 @@ class _AddRecipeViewState extends State<AddRecipeView> {
     var uuid = Uuid();
     String recipeId = uuid.v4();
 
-    Duration preparationTime = Duration(
-      hours: int.parse(_hoursController.text),
-      minutes: int.parse(_minutesController.text),
-    );
+    int hours =
+        _hoursController.text.isEmpty ? 0 : int.parse(_hoursController.text);
+    int minutes =
+        _minutesController.text.isEmpty
+            ? 0
+            : int.parse(_minutesController.text);
 
-    final newRecipe = Recipe(
+    String imagePath =
+        _pictureController.text.isEmpty
+            ? 'assets/images/image_recipe_default.png'
+            : _pictureController.text;
+
+    Duration preparationTime = Duration(hours: hours, minutes: minutes);
+
+    List<RecipeIngredient> ingredients = [];
+    for (int i = 0; i < ingredientNameControllers.length; i++) {
+      ingredients.add(
+        RecipeIngredient(
+          name: ingredientNameControllers[i].text,
+          quantity: quantityControllers[i].text,
+        ),
+      );
+    }
+
+    return Recipe(
       id: recipeId,
       name: _titleController.text,
       ingredients: ingredients,
       desc: _descriptionController.text,
       preparationTime: preparationTime,
       instructions: _instructionsController.text,
-      imagePath: 'assets/images/image_recipe_default.png', //imagem default
+      imagePath: imagePath,
     );
-
-    return newRecipe;
   }
 
   @override
@@ -283,7 +303,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                         Container(
                           width: 45,
                           height: 45,
-                          child: TextField(
+                          child: TextFormField(
                             controller: _hoursController,
                             keyboardType: TextInputType.number,
                             inputFormatters: [
@@ -314,7 +334,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                         Container(
                           width: 45,
                           height: 45,
-                          child: TextField(
+                          child: TextFormField(
                             controller: _minutesController,
                             keyboardType: TextInputType.number,
                             inputFormatters: [

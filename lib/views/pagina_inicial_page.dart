@@ -31,7 +31,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
       MaterialPageRoute(
         builder:
             (context) => AddRecipeView(
-              recipesRepository: context.watch<RecipesRepository>(),
+              recipesRepository: context.watch<RecipesRepositoryMemory>(),
             ),
       ),
     );*/
