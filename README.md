@@ -13,7 +13,7 @@ Aplicativo Flutter para cadastrar, listar, editar e remover receitas culinárias
 ## 🐛 Bugs
 
 - Ao apagar um ingrediente a contagem não é atualizada.
-- Mensagens de aviso de campo pbrigatório não sasem após preenchimento do campo.
+- Mensagens de aviso de campo pbrigatório não saem após preenchimento do campo.
 
 ## 📲 Funcionalidades faltantes
 - Login, Logout
