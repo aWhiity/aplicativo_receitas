@@ -26,12 +26,21 @@ class _PaginaInicialState extends State<PaginaInicial> {
   }
 
   void _adicionarReceita() {
-    Navigator.push(
+    /*Navigator.push(
       context,
       MaterialPageRoute(
         builder:
             (context) => AddRecipeView(
               recipesRepository: context.watch<RecipesRepository>(),
+            ),
+      ),
+    );*/
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => AddRecipeView(
+              recipesRepository: context.watch<RecipesRepositoryMemory>(),
             ),
       ),
     );
@@ -69,10 +78,10 @@ class _PaginaInicialState extends State<PaginaInicial> {
         onTap: _mudarPagina,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Receitas'),
-          BottomNavigationBarItem(
+          /*BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Favoritos',
-          ),
+          ),*/
           BottomNavigationBarItem(icon: Icon(Icons.wifi), label: 'Internet'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],

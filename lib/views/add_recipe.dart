@@ -1,7 +1,11 @@
+import 'package:aplicativo_receitas/models/recipe.dart';
+import 'package:aplicativo_receitas/models/recipe_ingredient.dart';
 import 'package:aplicativo_receitas/repositories/recipes_repository.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class AddRecipeView extends StatefulWidget {
   final RecipesRepository recipesRepository;
@@ -13,43 +17,54 @@ class AddRecipeView extends StatefulWidget {
 }
 
 class _AddRecipeViewState extends State<AddRecipeView> {
-  final int widthContainers = 0;
-  final TextEditingController _recipeNameController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _hoursController = TextEditingController();
   final TextEditingController _minutesController = TextEditingController();
-  List<TextEditingController> _ingredientControllers = [];
-  List<TextEditingController> _quantityControllers = [];
+  final TextEditingController _pictureController = TextEditingController();
+  final TextEditingController _instructionsController = TextEditingController();
 
-  List<Widget> ingredients = [];
+  final formKey = GlobalKey<FormState>();
+
+  List<RecipeIngredient> ingredients = [];
+  List<Widget> ingredientWidgets = [];
   //List<TextEditingController> _ingredientsController =
   //new List<TextEditingController>();
 
-  void addNewIngredient() {
+  void addNewIngredientWidget() {
     TextEditingController ingredientController = TextEditingController();
     TextEditingController quantityController = TextEditingController();
+    RecipeIngredient newIngredient = RecipeIngredient(
+      name: ingredientController.text,
+      quantity: quantityController.text,
+    );
 
     setState(() {
-      ingredients.add(
+      ingredientWidgets.add(
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Ingrediente ${ingredients.length + 1}:"),
+            Text("Ingrediente ${ingredientWidgets.length + 1}:"),
             Row(
               children: [
                 Container(
                   width: 275,
                   height: 35,
-                  child: TextField(
+                  child: TextFormField(
                     style: TextStyle(fontSize: 15),
                     controller: ingredientController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'O campo de ingrediente é obrigatório.';
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 IconButton(
                   onPressed:
-                      () => removeIngredient(
-                        _ingredientControllers.indexOf(ingredientController),
-                      ),
+                      () =>
+                          removeIngredient(ingredients.indexOf(newIngredient)),
                   icon: Icon(
                     Icons.delete_forever_outlined,
                     color: Color(0xFFb85a34),
@@ -84,16 +99,37 @@ class _AddRecipeViewState extends State<AddRecipeView> {
         ),
       );
     });
-    _ingredientControllers.add(ingredientController);
-    _quantityControllers.add(quantityController);
+
+    ingredients.add(newIngredient);
   }
 
   void removeIngredient(int index) {
     setState(() {
+      ingredientWidgets.removeAt(index);
       ingredients.removeAt(index);
-      _ingredientControllers.removeAt(index);
-      _quantityControllers.removeAt(index);
     });
+  }
+
+  Recipe createNewRecipe() {
+    var uuid = Uuid();
+    String recipeId = uuid.v4();
+
+    Duration preparationTime = Duration(
+      hours: int.parse(_hoursController.text),
+      minutes: int.parse(_minutesController.text),
+    );
+
+    final newRecipe = Recipe(
+      id: recipeId,
+      name: _titleController.text,
+      ingredients: ingredients,
+      desc: _descriptionController.text,
+      preparationTime: preparationTime,
+      instructions: _instructionsController.text,
+      imagePath: 'assets/images/image_recipe_default.png', //imagem default
+    );
+
+    return newRecipe;
   }
 
   @override
@@ -102,7 +138,9 @@ class _AddRecipeViewState extends State<AddRecipeView> {
       backgroundColor: Color(0xFFe2e2e2),
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: Icon(Icons.arrow_back_ios_new),
         ),
         title: Text(
@@ -110,223 +148,315 @@ class _AddRecipeViewState extends State<AddRecipeView> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 25),
-          child: Theme(
-            data: ThemeData(
-              textTheme: TextTheme(
-                bodyMedium: TextStyle(fontSize: 11.0, color: Color(0xFF4C4C4C)),
+      body: Form(
+        key: formKey,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 5.0,
+                horizontal: 25,
               ),
-              inputDecorationTheme: InputDecorationTheme(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(13.0)),
-                  borderSide: BorderSide(color: Color(0xffe7e7e7), width: 1.0),
+              child: Theme(
+                data: ThemeData(
+                  textTheme: TextTheme(
+                    bodyMedium: TextStyle(
+                      fontSize: 11.0,
+                      color: Color(0xFF4C4C4C),
+                    ),
+                  ),
+                  inputDecorationTheme: InputDecorationTheme(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(13.0)),
+                      borderSide: BorderSide(
+                        color: Color(0xffe7e7e7),
+                        width: 1.0,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(13.0)),
+                      borderSide: BorderSide(
+                        color: Color(0xFFd98b0e),
+                        width: 2.0,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(13.0)),
+                      borderSide: BorderSide(
+                        color: Color(0xffe7e7e7),
+                        width: 1.0,
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 5,
+                      horizontal: 12,
+                    ),
+                    filled: true,
+                    fillColor: Color(0xFFf7f7f7),
+                  ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(13.0)),
-                  borderSide: BorderSide(color: Color(0xFFd98b0e), width: 2.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(13.0)),
-                  borderSide: BorderSide(color: Color(0xffe7e7e7), width: 1.0),
-                ),
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 5,
-                  horizontal: 12,
-                ),
-                filled: true,
-                fillColor: Color(0xFFf7f7f7),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Informações',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Text(
+                      'Informações',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('Nome da Receita:'),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Nome da Receita:'),
+                            Container(
+                              width: 245,
+                              height: 35,
+                              child: TextFormField(
+                                controller: _titleController,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'O nome da receita é obrigatório';
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 10,
+                                    horizontal: 12,
+                                  ),
+                                ),
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 15),
                         Container(
-                          width: 245,
-                          height: 35,
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Color(0xfff7f7f7),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Center(
+                            child: IconButton(
+                              onPressed: () => {},
+                              icon: Icon(
+                                Icons.photo_size_select_actual_rounded,
+                              ),
+                              iconSize: 30,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12),
+                    Text('Descrição:'),
+                    Container(
+                      width: 500,
+                      height: 120,
+                      child: TextFormField(
+                        maxLines: 4,
+                        maxLength: 150,
+                        controller: _descriptionController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 12,
+                          ),
+                        ),
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
+                    Text('Tempo de Preparo:'),
+                    Text('\t(Hora e Minuto)', style: TextStyle(fontSize: 10)),
+                    SizedBox(height: 5),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 45,
+                          height: 45,
                           child: TextField(
-                            controller: _recipeNameController,
+                            controller: _hoursController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(2),
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
                             decoration: InputDecoration(
+                              hintText: "00",
                               border: OutlineInputBorder(),
                               contentPadding: EdgeInsets.symmetric(
                                 vertical: 10,
                                 horizontal: 12,
                               ),
                             ),
-                            style: TextStyle(fontSize: 13),
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          ":",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Container(
+                          width: 45,
+                          height: 45,
+                          child: TextField(
+                            controller: _minutesController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(2),
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            decoration: InputDecoration(
+                              hintText: "00",
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 12,
+                              ),
+                            ),
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(width: 15),
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: Color(0xfff7f7f7),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Center(
-                        child: IconButton(
-                          onPressed: () => {},
-                          icon: Icon(Icons.photo_size_select_actual_rounded),
-                          iconSize: 30,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12),
-                Text('Descrição:'),
-                Container(
-                  width: 500,
-                  height: 120,
-                  child: TextField(
-                    maxLines: 4,
-                    maxLength: 150,
-                    controller: _descriptionController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 12,
-                      ),
-                    ),
-                    style: TextStyle(fontSize: 13),
-                  ),
-                ),
-                Text('Tempo de Preparo:'),
-                Text('\t(Hora e Minuto)', style: TextStyle(fontSize: 10)),
-                SizedBox(height: 5),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 45,
-                      height: 45,
-                      child: TextField(
-                        controller: _hoursController,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(2),
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        decoration: InputDecoration(
-                          hintText: "00",
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 12,
-                          ),
-                        ),
-                        style: TextStyle(fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(width: 5),
+                    SizedBox(height: 20),
                     Text(
-                      ":",
+                      'Ingredientes',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 5),
                     Container(
-                      width: 45,
-                      height: 45,
-                      child: TextField(
-                        controller: _minutesController,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(2),
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
+                      width: 540,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 1.0,
+                          horizontal: 3.0,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextButton.icon(
+                              onPressed: () {
+                                addNewIngredientWidget();
+                              },
+                              icon: Icon(
+                                Icons.add,
+                                size: 25,
+                                color: Color(0xff787878),
+                              ),
+                              label: Text(
+                                'Ingrediente',
+                                style: TextStyle(color: Color(0xff787878)),
+                              ),
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 1,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                side: BorderSide(
+                                  color: Color(0xff787878),
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: ingredientWidgets.length,
+                      itemBuilder: (context, index) {
+                        return ingredientWidgets[index];
+                      },
+                    ),
+                    Text(
+                      'Modo de Preparo',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Container(
+                      width: 500,
+                      child: TextFormField(
+                        maxLines: null,
+                        controller: _instructionsController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'O modo de preparo da receita é obrigatório';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
-                          hintText: "00",
                           border: OutlineInputBorder(),
                           contentPadding: EdgeInsets.symmetric(
                             vertical: 10,
                             horizontal: 12,
                           ),
                         ),
-                        style: TextStyle(fontSize: 16),
-                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    TextButton.icon(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          Recipe recipe = createNewRecipe();
+
+                          Provider.of<RecipesRepositoryMemory>(
+                            context,
+                            listen: false,
+                          ).createRecipe(recipe);
+
+                          Navigator.pop(context);
+                        }
+                      },
+                      icon: Icon(
+                        Icons.check,
+                        size: 25,
+                        color: Color(0xfff7f7f7),
+                      ),
+                      label: Text(
+                        'Salvar',
+                        style: TextStyle(color: Color(0xfff7f7f7)),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.lightGreen,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 1,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
-                Text(
-                  'Ingredientes',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Container(
-                  width: 540,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 1.0,
-                      horizontal: 3.0,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextButton.icon(
-                          onPressed: () {
-                            addNewIngredient();
-                          },
-                          icon: Icon(
-                            Icons.add,
-                            size: 25,
-                            color: Color(0xff787878),
-                          ),
-                          label: Text(
-                            'Ingrediente',
-                            style: TextStyle(color: Color(0xff787878)),
-                          ),
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 1,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            side: BorderSide(
-                              color: Color(0xff787878),
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: ingredients.length,
-                  itemBuilder: (context, index) {
-                    return ingredients[index];
-                  },
-                ),
-                Text(
-                  'Modo de Preparo',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
+              ),
             ),
           ),
         ),

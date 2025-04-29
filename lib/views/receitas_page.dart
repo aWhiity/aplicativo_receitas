@@ -8,32 +8,65 @@ class ReceitasPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final recipesRepository = context.watch<RecipesRepository>();
+    final recipesRepository = context.watch<RecipesRepositoryMemory>();
 
     final recipes = recipesRepository.recipes;
 
-    if (recipes.isEmpty) {
-      return Center(child: Text('Nenhuma receita cadastrada.'));
-    } else {
-      return ListView.builder(
-        itemCount: recipes.length,
-        itemBuilder: (context, index) {
-          final recipe = recipes[index];
-          return Card(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: ListTile(
-              leading: Image.asset(recipe.imagePath),
-              title: Text(recipe.name),
-              subtitle: Text(recipe.desc ?? ''),
-              trailing: Text(
-                formatDuration(recipe.preparationTime),
-                style: TextStyle(color: Colors.grey),
+    return Scaffold(
+      appBar: AppBar(
+        leading: Icon(Icons.book, color: Colors.white),
+        title: Text('Receitas'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              //ação
+            },
+          ),
+        ],
+      ),
+      body:
+          recipes.isEmpty
+              ? Center(child: Text('Nenhuma receita cadastrada'))
+              : ListView.builder(
+                itemCount: recipes.length,
+                itemBuilder: (context, index) {
+                  final recipe = recipes[index];
+                  return Card(
+                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: ListTile(
+                      leading:
+                          recipe.imagePath.isNotEmpty
+                              ? Image.asset(
+                                recipe.imagePath,
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              )
+                              : SizedBox(
+                                width: 60,
+                                height: 60,
+                                //color: Colors.grey[300],
+                                child: Icon(Icons.photo, size: 30),
+                              ),
+                      title: Text(recipe.name),
+                      subtitle: Text(
+                        recipe.desc ?? 'Sem descrição',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: Text(
+                        formatDuration(recipe.preparationTime ?? Duration.zero),
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      onTap: () {
+                        //
+                      },
+                    ),
+                  );
+                },
               ),
-            ),
-          );
-        },
-      );
-    }
+    );
   }
 }
 
@@ -44,6 +77,6 @@ String formatDuration(Duration duration) {
   if (hours > 0) {
     return '${hours}h ${minutes}m';
   } else {
-    return '$minutes';
+    return '${minutes}';
   }
 }
