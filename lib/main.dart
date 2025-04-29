@@ -5,7 +5,7 @@ import 'repositories/recipes_repository.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider<RecipesRepository>(
+    ChangeNotifierProvider<RecipesRepositoryMemory>(
       create: (context) => RecipesRepositoryMemory(),
       child: MeuAplicativo(),
     ),
