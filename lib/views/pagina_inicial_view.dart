@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'favoritos_view.dart';
 import 'internet_view.dart';
 import 'perfil_view.dart';
-import 'add_recipe.dart';
+import 'add_recipe_view.dart';
 import 'receitas_view.dart';
 import '../repositories/recipes_repository.dart';
 
