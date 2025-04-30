@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:aplicativo_receitas/utils/format_duration.dart';
 import 'package:aplicativo_receitas/utils/string_extensions.dart';
 import 'package:aplicativo_receitas/views/recipe_detail_view.dart';
