@@ -1,12 +1,72 @@
+import 'package:aplicativo_receitas/repositories/favorites_repository.dart';
+import 'package:aplicativo_receitas/utils/format_duration.dart';
+import 'package:aplicativo_receitas/utils/string_extensions.dart';
+import 'package:aplicativo_receitas/views/recipe_detail_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PaginaFavoritos extends StatelessWidget {
   const PaginaFavoritos({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Página de Favoritos'),
-    );
+    final favoritesRepository = context.watch<FavoritesRepositoryMemory>();
+    final favorites = favoritesRepository.recipes;
+
+    if (favorites.isEmpty) {
+      return Center(child: Text('Nenhuma receita favorita encontrada.'));
+    } else {
+      return ListView.builder(
+        itemCount: favorites.length,
+        itemBuilder: (context, index) {
+          final recipe = favorites[index];
+          return Card(
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: ListTile(
+              //leading: Image.asset(recipe.imagePath),
+              title: Text(
+                recipe.name.capitalizeAllWords(),
+                style: TextStyle(fontSize: 18),
+              ),
+              //subtitle: Text(recipe.desc ?? ''),
+              subtitle: Row(
+                children: [
+                  Icon(
+                    Icons.access_time_rounded,
+                    size: 20,
+                    color: Color(0xff999999),
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    formatDuration(
+                      recipe.preparationTime ?? Duration(hours: 0, minutes: 0),
+                    ),
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              trailing: Image.asset(recipe.imagePath),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RecipeDetailsView(recipe: recipe),
+                  ),
+                );
+              },
+              /*trailing: Text(
+                formatDuration(
+                  recipe.preparationTime ?? Duration(hours: 0, minutes: 0),
+                ),
+                style: TextStyle(color: Colors.grey),
+              ),*/
+            ),
+          );
+        },
+      );
+    }
   }
 }
