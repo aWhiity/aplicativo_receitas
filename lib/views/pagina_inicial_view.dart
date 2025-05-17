@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'favoritos_page.dart';
-import 'internet_page.dart';
-import 'perfil_page.dart';
+import 'favoritos_view.dart';
+import 'internet_view.dart';
+import 'perfil_view.dart';
 import 'add_recipe.dart';
-import 'receitas_page.dart';
+import 'receitas_view.dart';
 import '../repositories/recipes_repository.dart';
 
 class PaginaInicial extends StatefulWidget {
@@ -26,6 +26,15 @@ class _PaginaInicialState extends State<PaginaInicial> {
   }
 
   void _adicionarReceita() {
+    /*Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => AddRecipeView(
+              recipesRepository: context.watch<RecipesRepositoryMemory>(),
+            ),
+      ),
+    );*/
     Navigator.push(
       context,
       MaterialPageRoute(
