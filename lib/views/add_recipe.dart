@@ -359,6 +359,20 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                             ),
                             style: TextStyle(fontSize: 16),
                             textAlign: TextAlign.center,
+                            onChanged: (value) {
+                              if (value.isNotEmpty) {
+                                int number = int.parse(value);
+                                if (number > 59) {
+                                  _minutesController.text = '59';
+                                  _minutesController
+                                      .selection = TextSelection.fromPosition(
+                                    TextPosition(
+                                      offset: _minutesController.text.length,
+                                    ),
+                                  );
+                                }
+                              }
+                            },
                           ),
                         ),
                       ],
