@@ -19,6 +19,10 @@ class _PaginaInicialState extends State<PaginaInicial> {
 
   int _paginaSelecionada = 0;
 
+  bool _isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
+  String _termoBusca = '';
+
   void _mudarPagina(int index) {
     setState(() {
       _paginaSelecionada = index;
@@ -26,15 +30,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
   }
 
   void _adicionarReceita() {
-    /*Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder:
-            (context) => AddRecipeView(
-              recipesRepository: context.watch<RecipesRepositoryMemory>(),
-            ),
-      ),
-    );*/
+    
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -49,7 +45,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _paginas = [
-      ReceitasPage(),
+      ReceitasPage(termoBusca: _termoBusca,),
       PaginaFavoritos(),
       PaginaInternet(),
       PaginaPerfil(),
@@ -58,14 +54,39 @@ class _PaginaInicialState extends State<PaginaInicial> {
     return Scaffold(
       appBar: AppBar(
         leading: Icon(Icons.book_outlined, color: Colors.white),
-        title: Text('Receitas', style: TextStyle(color: Colors.white)),
+        title: _isSearching
+          ? TextField(
+            controller: _searchController,
+            autofocus: true,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: 'Buscar receita...',
+              hintStyle: TextStyle(color: Colors.white70),
+              border: InputBorder.none,
+            ),
+            onChanged: (valor) {
+              setState(() {
+                _termoBusca = valor.toLowerCase();
+              });
+            },
+          )
+          : Text('Receitas', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.grey,
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: Colors.white),
+            icon: Icon(_isSearching ? Icons.close : Icons.search, color: Colors.white,),
             onPressed: () {
-              //ação
-            },
+              setState(() {
+                if (_isSearching){
+                  _searchController.clear();
+                  _termoBusca = '';
+                  _isSearching = false;
+                }else{
+                  _isSearching = true;
+                }
+              });
+              }
+            
           ),
         ],
       ),
