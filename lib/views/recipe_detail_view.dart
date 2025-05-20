@@ -1,15 +1,27 @@
 import 'package:aplicativo_receitas/models/recipe.dart';
+import 'package:aplicativo_receitas/repositories/favorites_repository.dart';
+import 'package:aplicativo_receitas/repositories/recipes_repository.dart';
 import 'package:aplicativo_receitas/utils/format_duration.dart';
 import 'package:aplicativo_receitas/utils/string_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class RecipeDetailsView extends StatelessWidget {
+class RecipeDetailsView extends StatefulWidget {
   final Recipe recipe;
 
-  RecipeDetailsView({required this.recipe});
+  const RecipeDetailsView({super.key, required this.recipe});
 
   @override
+  State<RecipeDetailsView> createState() => _RecipeDetailsViewState();
+}
+
+class _RecipeDetailsViewState extends State<RecipeDetailsView> {
+  @override
   Widget build(BuildContext context) {
+    final favoritesRepository = context.watch<FavoritesRepositoryMemory>();
+    final favorites = favoritesRepository.recipes;
+    final isFavorite = favorites.contains(widget.recipe);
+
     return Scaffold(
       backgroundColor: Color(0xFFe2e2e2),
       body: Padding(
@@ -26,7 +38,7 @@ class RecipeDetailsView extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       image: DecorationImage(
-                        image: AssetImage(recipe.imagePath),
+                        image: AssetImage(widget.recipe.imagePath),
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -59,25 +71,36 @@ class RecipeDetailsView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          recipe.name.capitalizeAllWords(),
+                          widget.recipe.name.capitalizeAllWords(),
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         IconButton(
-                          icon: Icon(Icons.favorite_border),
-                          iconSize: 35,
-                          onPressed: () => {
-                            Icon(Icons.favorite),
-                            this.recipe.isFav = true
-
+                          onPressed: () {
+                            if (isFavorite) {
+                              Provider.of<FavoritesRepositoryMemory>(
+                                context,
+                                listen: false,
+                              ).removeFavorite(widget.recipe);
+                            } else {
+                              Provider.of<FavoritesRepositoryMemory>(
+                                context,
+                                listen: false,
+                              ).addFavorite(widget.recipe);
+                            }
                           },
+                          icon: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorite ? Colors.red : Colors.black,
+                          ),
+                          iconSize: 35,
                         ),
                       ],
                     ),
                     Text(
-                      (recipe.desc ?? "-").capitalize(),
+                      (widget.recipe.desc ?? "-").capitalize(),
                       style: TextStyle(
                         fontStyle: FontStyle.italic,
                         color: Color(0xff505050),
@@ -109,7 +132,9 @@ class RecipeDetailsView extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children:
-                                        recipe.ingredients.map((ingredient) {
+                                        widget.recipe.ingredients.map((
+                                          ingredient,
+                                        ) {
                                           return Text(
                                             '• ${ingredient.quantity.capitalizeAllWords()} de ${ingredient.name.capitalizeAllWords()}',
                                             style: TextStyle(fontSize: 16),
@@ -121,7 +146,7 @@ class RecipeDetailsView extends StatelessWidget {
                                   padding: EdgeInsets.all(16),
                                   child: SingleChildScrollView(
                                     child: Text(
-                                      recipe.instructions.capitalize(),
+                                      widget.recipe.instructions.capitalize(),
                                     ),
                                   ),
                                 ),
@@ -145,7 +170,7 @@ class RecipeDetailsView extends StatelessWidget {
                                       color: Color(0xff999999),
                                     ),
                                     Text(
-                                      "Tempo de Preparo: ${formatDuration(recipe.preparationTime ?? Duration.zero)}",
+                                      "Tempo de Preparo: ${formatDuration(widget.recipe.preparationTime ?? Duration.zero)}",
                                     ),
                                   ],
                                 ),
