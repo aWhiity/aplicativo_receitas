@@ -31,6 +31,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
 
   List<RecipeIngredient> ingredients = [];
   List<Widget> ingredientWidgets = [];
+  int counter = 0;
   //List<TextEditingController> _ingredientsController =
   //new List<TextEditingController>();
 
@@ -61,7 +62,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                   ),
                 ),
                 IconButton(
-                  onPressed:() {
+                  onPressed: () {
                     removeIngredient(
                       ingredientNameControllers.indexOf(ingredientController),
                     );
@@ -78,9 +79,15 @@ class _AddRecipeViewState extends State<AddRecipeView> {
             Container(
               width: 170,
               height: 35,
-              child: TextField(
+              child: TextFormField(
                 style: TextStyle(fontSize: 15),
                 controller: quantityController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'O campo de ingrediente é obrigatório.';
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                   hintText: "Ex: 500g / 1 xícara",
                   hintStyle: TextStyle(
@@ -103,6 +110,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
 
     ingredientNameControllers.add(ingredientController);
     quantityControllers.add(quantityController);
+    counter++;
   }
 
   void removeIngredient(int index) {
@@ -444,6 +452,18 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                     TextButton.icon(
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
+                          if (counter <= 0) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Adicione pelo menos um ingrediente.',
+                                ),
+                                backgroundColor: Color(0xfff55f54),
+                              ),
+                            );
+
+                            return;
+                          }
                           Recipe recipe = createNewRecipe();
 
                           Provider.of<RecipesRepositoryMemory>(
