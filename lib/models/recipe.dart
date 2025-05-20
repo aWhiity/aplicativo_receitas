@@ -8,6 +8,7 @@ class Recipe {
   Duration? preparationTime;
   String instructions;
   String imagePath;
+  bool isFav;
 
   Recipe({
     required this.id,
@@ -17,5 +18,6 @@ class Recipe {
     this.preparationTime,
     required this.instructions,
     required this.imagePath,
+    this. isFav = false
   });
 }

@@ -66,9 +66,13 @@ class RecipeDetailsView extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: () => {},
                           icon: Icon(Icons.favorite_border),
                           iconSize: 35,
+                          onPressed: () => {
+                            Icon(Icons.favorite),
+                            this.recipe.isFav = true
+
+                          },
                         ),
                       ],
                     ),
