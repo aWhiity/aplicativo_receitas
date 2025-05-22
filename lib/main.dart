@@ -3,8 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:aplicativo_receitas/meu_aplicatico.dart';
 import 'package:provider/provider.dart';
 import 'repositories/recipes_repository.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+  );
+
+  
+  runApp(const MeuAplicativo());
+
   runApp(
     MultiProvider(
       providers: [
