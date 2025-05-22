@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:aplicativo_receitas/utils/format_duration.dart';
 import 'package:aplicativo_receitas/utils/string_extensions.dart';
 import 'package:aplicativo_receitas/views/recipe_detail_view.dart';
@@ -10,13 +8,25 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ReceitasPage extends StatelessWidget {
-  const ReceitasPage({super.key});
+  final String termoBusca;
+
+  const ReceitasPage({super.key, required this.termoBusca});
 
   @override
   Widget build(BuildContext context) {
     final recipesRepository = context.watch<RecipesRepositoryMemory>();
 
     final recipes = recipesRepository.recipes;
+
+    final receitasFiltradas = termoBusca.isEmpty
+        ? recipes
+        : recipes.where((recipe) {
+            return recipe.name.toLowerCase().contains(termoBusca);
+          }).toList();
+
+    if (receitasFiltradas.isEmpty) {
+      return Center(child: Text('Nenhuma receita encontrada.'));
+    }
 
     if (recipes.isEmpty) {
       return Center(child: Text('Nenhuma receita cadastrada.'));
@@ -33,7 +43,6 @@ class ReceitasPage extends StatelessWidget {
                 recipe.name.capitalizeAllWords(),
                 style: TextStyle(fontSize: 18),
               ),
-              //subtitle: Text(recipe.desc ?? ''),
               subtitle: Row(
                 children: [
                   Icon(
