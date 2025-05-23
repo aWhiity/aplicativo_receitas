@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class AddRecipeView extends StatefulWidget {
   final RecipesRepository recipesRepository;
@@ -26,14 +28,15 @@ class _AddRecipeViewState extends State<AddRecipeView> {
 
   final formKey = GlobalKey<FormState>();
 
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+
   List<TextEditingController> ingredientNameControllers = [];
   List<TextEditingController> quantityControllers = [];
 
   List<RecipeIngredient> ingredients = [];
   List<Widget> ingredientWidgets = [];
   int counter = 0;
-  //List<TextEditingController> _ingredientsController =
-  //new List<TextEditingController>();
 
   void addNewIngredientWidget() {
     final ingredientController = TextEditingController();
@@ -160,6 +163,20 @@ class _AddRecipeViewState extends State<AddRecipeView> {
     );
   }
 
+  Future<void> _pickImage() async {
+    final XFile? pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+        _pictureController.text = _image!.path;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -271,14 +288,23 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                             color: Color(0xfff7f7f7),
                             borderRadius: BorderRadius.circular(15.0),
                           ),
-                          child: Center(
-                            child: IconButton(
-                              onPressed: () => {},
-                              icon: Icon(
-                                Icons.photo_size_select_actual_rounded,
-                              ),
-                              iconSize: 30,
-                            ),
+                          child: GestureDetector(
+                            onTap: _pickImage,
+                            child:
+                                _image == null
+                                    ? Icon(
+                                      Icons.photo_size_select_actual_rounded,
+                                      size: 30,
+                                    )
+                                    : ClipRRect(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      child: Image.file(
+                                        _image!,
+                                        width: 80,
+                                        height: 80,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                           ),
                         ),
                       ],

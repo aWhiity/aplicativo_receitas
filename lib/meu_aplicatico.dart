@@ -1,4 +1,5 @@
 
+import 'package:aplicativo_receitas/views/receitas_view.dart';
 import 'package:flutter/material.dart';
 import 'views/pagina_inicial_view.dart';
 
@@ -12,6 +13,11 @@ class MeuAplicativo extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       home: PaginaInicial(),
+
+      initialRoute: '/',
+      routes: {
+        '/home': (context) => ReceitasPage(termoBusca: ''),
+      },
     );
   }
 }
