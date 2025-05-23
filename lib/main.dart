@@ -12,8 +12,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
   );
 
-  
-  runApp(const MeuAplicativo());
 
   runApp(
     MultiProvider(
