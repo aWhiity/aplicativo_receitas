@@ -1,9 +1,7 @@
+import 'package:aplicativo_receitas/repositories/memory/recipes_repository_memory.dart';
 import 'package:aplicativo_receitas/utils/format_duration.dart';
 import 'package:aplicativo_receitas/utils/string_extensions.dart';
 import 'package:aplicativo_receitas/views/recipe_detail_view.dart';
-
-import '../repositories/recipes_repository.dart';
-import '../models/recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,11 +16,12 @@ class ReceitasPage extends StatelessWidget {
 
     final recipes = recipesRepository.recipes;
 
-    final receitasFiltradas = termoBusca.isEmpty
-        ? recipes
-        : recipes.where((recipe) {
-            return recipe.name.toLowerCase().contains(termoBusca);
-          }).toList();
+    final receitasFiltradas =
+        termoBusca.isEmpty
+            ? recipes
+            : recipes.where((recipe) {
+              return recipe.name.toLowerCase().contains(termoBusca);
+            }).toList();
 
     if (receitasFiltradas.isEmpty) {
       return Center(child: Text('Nenhuma receita encontrada.'));

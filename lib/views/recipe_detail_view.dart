@@ -1,6 +1,5 @@
 import 'package:aplicativo_receitas/models/recipe.dart';
-import 'package:aplicativo_receitas/repositories/favorites_repository.dart';
-import 'package:aplicativo_receitas/repositories/recipes_repository.dart';
+import 'package:aplicativo_receitas/repositories/memory/favorites_repository_memory.dart';
 import 'package:aplicativo_receitas/utils/format_duration.dart';
 import 'package:aplicativo_receitas/utils/string_extensions.dart';
 import 'package:flutter/material.dart';

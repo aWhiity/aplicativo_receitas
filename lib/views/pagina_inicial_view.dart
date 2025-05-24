@@ -1,3 +1,4 @@
+import 'package:aplicativo_receitas/repositories/memory/recipes_repository_memory.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'favoritos_view.dart';
@@ -5,7 +6,6 @@ import 'internet_view.dart';
 import 'perfil_view.dart';
 import 'add_recipe_view.dart';
 import 'receitas_view.dart';
-import '../repositories/recipes_repository.dart';
 
 class PaginaInicial extends StatefulWidget {
   const PaginaInicial({super.key});
@@ -30,7 +30,6 @@ class _PaginaInicialState extends State<PaginaInicial> {
   }
 
   void _adicionarReceita() {
-    
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -45,7 +44,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _paginas = [
-      ReceitasPage(termoBusca: _termoBusca,),
+      ReceitasPage(termoBusca: _termoBusca),
       PaginaFavoritos(),
       PaginaInternet(),
       PaginaPerfil(),
@@ -54,39 +53,42 @@ class _PaginaInicialState extends State<PaginaInicial> {
     return Scaffold(
       appBar: AppBar(
         leading: Icon(Icons.book_outlined, color: Colors.white),
-        title: _isSearching
-          ? TextField(
-            controller: _searchController,
-            autofocus: true,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: 'Buscar receita...',
-              hintStyle: TextStyle(color: Colors.white70),
-              border: InputBorder.none,
-            ),
-            onChanged: (valor) {
-              setState(() {
-                _termoBusca = valor.toLowerCase();
-              });
-            },
-          )
-          : Text('Receitas', style: TextStyle(color: Colors.white)),
+        title:
+            _isSearching
+                ? TextField(
+                  controller: _searchController,
+                  autofocus: true,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Buscar receita...',
+                    hintStyle: TextStyle(color: Colors.white70),
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (valor) {
+                    setState(() {
+                      _termoBusca = valor.toLowerCase();
+                    });
+                  },
+                )
+                : Text('Receitas', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.grey,
         actions: [
           IconButton(
-            icon: Icon(_isSearching ? Icons.close : Icons.search, color: Colors.white,),
+            icon: Icon(
+              _isSearching ? Icons.close : Icons.search,
+              color: Colors.white,
+            ),
             onPressed: () {
               setState(() {
-                if (_isSearching){
+                if (_isSearching) {
                   _searchController.clear();
                   _termoBusca = '';
                   _isSearching = false;
-                }else{
+                } else {
                   _isSearching = true;
                 }
               });
-              }
-            
+            },
           ),
         ],
       ),
