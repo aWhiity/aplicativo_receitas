@@ -30,6 +30,7 @@ class Usuario {
     return {
       'name': name,
       'username': username,
+      
       'email': email,
       'registration_date': registrationDate,
     };
