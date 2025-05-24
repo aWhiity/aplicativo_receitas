@@ -162,3 +162,7 @@ app.*.symbols
 
 # Others
 .env
+
+# Firebase config files
+android/app/google-services.json
+libs/firebase_options.dart
