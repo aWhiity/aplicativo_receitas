@@ -1,3 +1,4 @@
+import 'package:aplicativo_receitas/repositories/firebase/recipes_repository_firebase.dart';
 import 'package:aplicativo_receitas/repositories/memory/recipes_repository_memory.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
       MaterialPageRoute(
         builder:
             (context) => AddRecipeView(
-              recipesRepository: context.watch<RecipesRepositoryMemory>(),
+              recipesRepository: context.watch<RecipesRepositoryFirebase>(),
+              isEditing: false,
             ),
       ),
     );
