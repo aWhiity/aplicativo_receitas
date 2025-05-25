@@ -42,7 +42,6 @@ class _CadastroUsuarioViewState extends State<CadastroUsuarioView> {
 
       await _firestore.collection('users').doc(user.id).set(user.toFirestore());
 
-      // 4. Navega para home
       if (mounted) Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       _showErrorSnackBar(_getAuthErrorMessage(e));
@@ -134,6 +133,12 @@ class _CadastroUsuarioViewState extends State<CadastroUsuarioView> {
                           ? const CircularProgressIndicator()
                           : const Text('Criar conta'),
                 ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/login');
+                },
+                child: const Text('Já tem uma conta? Faça Login'),
               ),
             ],
           ),
