@@ -1,4 +1,4 @@
-import 'package:aplicativo_receitas/repositories/memory/recipes_repository_memory.dart';
+import 'package:aplicativo_receitas/repositories/firebase/recipes_repository_firebase.dart';
 import 'package:aplicativo_receitas/utils/format_duration.dart';
 import 'package:aplicativo_receitas/utils/string_extensions.dart';
 import 'package:aplicativo_receitas/views/recipe_detail_view.dart';
@@ -12,7 +12,7 @@ class ReceitasPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final recipesRepository = context.watch<RecipesRepositoryMemory>();
+    final recipesRepository = context.watch<RecipesRepositoryFirebase>();
 
     final recipes = recipesRepository.recipes;
 

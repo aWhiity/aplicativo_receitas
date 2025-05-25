@@ -1,8 +1,9 @@
-import 'package:aplicativo_receitas/repositories/favorites_repository.dart';
+import 'package:aplicativo_receitas/repositories/firebase/recipes_repository_firebase.dart';
+import 'package:aplicativo_receitas/repositories/memory/favorites_repository_memory.dart';
+import 'package:aplicativo_receitas/repositories/memory/recipes_repository_memory.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicativo_receitas/meu_aplicativo.dart';
 import 'package:provider/provider.dart';
-import 'repositories/recipes_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -13,8 +14,8 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<RecipesRepositoryMemory>(
-          create: (context) => RecipesRepositoryMemory(),
+        ChangeNotifierProvider<RecipesRepositoryFirebase>(
+          create: (context) => RecipesRepositoryFirebase(),
         ),
         ChangeNotifierProvider<FavoritesRepositoryMemory>(
           create: (context) => FavoritesRepositoryMemory(),
