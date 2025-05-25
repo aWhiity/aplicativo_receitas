@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'aplicativo-receitas-60dbc.firebasestorage.app',
     measurementId: 'G-BZC6N37NN6',
   );
-
 }
