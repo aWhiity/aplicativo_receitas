@@ -1,7 +1,9 @@
 import 'package:aplicativo_receitas/models/recipe.dart';
+import 'package:aplicativo_receitas/repositories/firebase/recipes_repository_firebase.dart';
 import 'package:aplicativo_receitas/repositories/memory/favorites_repository_memory.dart';
 import 'package:aplicativo_receitas/utils/format_duration.dart';
 import 'package:aplicativo_receitas/utils/string_extensions.dart';
+import 'package:aplicativo_receitas/views/add_recipe_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -76,25 +78,53 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            if (isFavorite) {
-                              Provider.of<FavoritesRepositoryMemory>(
-                                context,
-                                listen: false,
-                              ).removeFavorite(widget.recipe);
-                            } else {
-                              Provider.of<FavoritesRepositoryMemory>(
-                                context,
-                                listen: false,
-                              ).addFavorite(widget.recipe);
-                            }
-                          },
-                          icon: Icon(
-                            isFavorite ? Icons.favorite : Icons.favorite_border,
-                            color: isFavorite ? Colors.red : Colors.black,
-                          ),
-                          iconSize: 35,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => AddRecipeView(
+                                          recipesRepository:
+                                              context
+                                                  .watch<
+                                                    RecipesRepositoryFirebase
+                                                  >(),
+                                          isEditing: true,
+                                          recipeToEdit: widget.recipe,
+                                        ),
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.edit_outlined),
+                              iconSize: 35,
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                if (isFavorite) {
+                                  Provider.of<FavoritesRepositoryMemory>(
+                                    context,
+                                    listen: false,
+                                  ).removeFavorite(widget.recipe);
+                                } else {
+                                  Provider.of<FavoritesRepositoryMemory>(
+                                    context,
+                                    listen: false,
+                                  ).addFavorite(widget.recipe);
+                                }
+                              },
+                              icon: Icon(
+                                isFavorite
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: isFavorite ? Colors.red : Colors.black,
+                              ),
+                              iconSize: 35,
+                            ),
+                          ],
                         ),
                       ],
                     ),
