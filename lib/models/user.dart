@@ -6,6 +6,7 @@ class Usuario {
   final String username;
   final String email;
   final Timestamp registrationDate;
+  final List<String> recipeIds;
 
   Usuario({
     required this.id,
@@ -13,6 +14,7 @@ class Usuario {
     required this.username,
     required this.email,
     required this.registrationDate,
+    this.recipeIds = const [],
   });
 
   factory Usuario.fromFirestore(DocumentSnapshot doc) {
@@ -23,6 +25,7 @@ class Usuario {
       username: data['username'],
       email: data['email'],
       registrationDate: data['registration_date'],
+      recipeIds: List<String>.from(data['recipe_ids'] ?? []),
     );
   }
 
@@ -30,7 +33,7 @@ class Usuario {
     return {
       'name': name,
       'username': username,
-      
+
       'email': email,
       'registration_date': registrationDate,
     };

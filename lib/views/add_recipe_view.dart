@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddRecipeView extends StatefulWidget {
@@ -127,6 +128,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
   Recipe createNewRecipe() {
     var uuid = Uuid();
     String recipeId = uuid.v4();
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
     int hours =
         _hoursController.text.isEmpty ? 0 : int.parse(_hoursController.text);
@@ -155,6 +157,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
     return Recipe(
       id: recipeId,
       name: _titleController.text,
+      userId: userId,
       ingredients: ingredients,
       desc: _descriptionController.text,
       preparationTime: preparationTime,
