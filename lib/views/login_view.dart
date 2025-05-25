@@ -93,6 +93,56 @@ class _LoginViewState extends State<LoginView> {
                 obscureText: true,
                 validator: (v) => v!.isEmpty ? 'Informe sua senha' : null,
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            title: const Text('Recuperar senha'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                  'Digite seu e-mail para recuperar sua senha',
+                                ),
+                                const SizedBox(height: 10),
+                                TextFormField(
+                                  controller: _emailController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'E-mail',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  FirebaseAuth.instance.sendPasswordResetEmail(
+                                    email: _emailController.text.trim(),
+                                  );
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Enviar e-mail'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: const Text('Esqueci minha senha'),
+                  ),
+                ],
+              ),
               const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
