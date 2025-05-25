@@ -20,7 +20,7 @@ class MeuAplicativo extends StatelessWidget {
         '/home': (context) => PaginaInicial(),
         '/cadastro': (context) => CadastroUsuarioView(),
         '/login': (context) => LoginView(),
-        'perfil': (context) => PaginaPerfil(),
+        '/perfil': (context) => PaginaPerfil(),
       },
     );
   }
