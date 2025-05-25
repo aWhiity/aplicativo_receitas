@@ -1,5 +1,6 @@
 import 'package:aplicativo_receitas/models/recipe.dart';
 import 'package:aplicativo_receitas/models/recipe_ingredient.dart';
+import 'package:aplicativo_receitas/repositories/firebase/recipes_repository_firebase.dart';
 import 'package:aplicativo_receitas/repositories/recipes_repository.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,15 @@ import 'package:image_picker/image_picker.dart';
 
 class AddRecipeView extends StatefulWidget {
   final RecipesRepository recipesRepository;
+  final bool isEditing;
+  final Recipe? recipeToEdit;
 
-  const AddRecipeView({super.key, required this.recipesRepository});
+  const AddRecipeView({
+    super.key,
+    required this.recipesRepository,
+    required this.isEditing,
+    this.recipeToEdit,
+  });
 
   @override
   State<AddRecipeView> createState() => _AddRecipeViewState();
@@ -37,6 +45,15 @@ class _AddRecipeViewState extends State<AddRecipeView> {
   List<RecipeIngredient> ingredients = [];
   List<Widget> ingredientWidgets = [];
   int counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.isEditing && widget.recipeToEdit != null) {
+      fillFields(widget.recipeToEdit!);
+    }
+  }
 
   void addNewIngredientWidget() {
     final ingredientController = TextEditingController();
@@ -121,12 +138,19 @@ class _AddRecipeViewState extends State<AddRecipeView> {
       ingredientWidgets.removeAt(index);
       ingredientNameControllers.removeAt(index);
       quantityControllers.removeAt(index);
+      counter--;
     });
   }
 
   Recipe createNewRecipe() {
-    var uuid = Uuid();
-    String recipeId = uuid.v4();
+    var uuid;
+    String recipeId;
+    if (widget.isEditing) {
+      recipeId = widget.recipeToEdit?.id ?? "";
+    } else {
+      uuid = Uuid();
+      recipeId = uuid.v4();
+    }
 
     int hours =
         _hoursController.text.isEmpty ? 0 : int.parse(_hoursController.text);
@@ -174,6 +198,22 @@ class _AddRecipeViewState extends State<AddRecipeView> {
         _image = File(pickedFile.path);
         _pictureController.text = _image!.path;
       });
+    }
+  }
+
+  void fillFields(Recipe recipe) {
+    _titleController.text = recipe.name;
+    _descriptionController.text = recipe.desc ?? "";
+    _hoursController.text = (recipe.preparationTime?.inHours ?? 0).toString();
+    _minutesController.text =
+        ((recipe.preparationTime?.inMinutes ?? 0) % 60).toString();
+    _instructionsController.text = recipe.instructions;
+    _pictureController.text = recipe.imagePath;
+
+    for (int i = 0; i < recipe.ingredients.length; i++) {
+      addNewIngredientWidget();
+      ingredientNameControllers[i].text = recipe.ingredients[i].name;
+      quantityControllers[i].text = recipe.ingredients[i].quantity;
     }
   }
 
@@ -506,12 +546,20 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                           }
                           Recipe recipe = createNewRecipe();
 
-                          Provider.of<RecipesRepositoryMemory>(
-                            context,
-                            listen: false,
-                          ).createRecipe(recipe);
-
-                          Navigator.pop(context);
+                          if (widget.isEditing) {
+                            Provider.of<RecipesRepositoryFirebase>(
+                              context,
+                              listen: false,
+                            ).editRecipe(recipe);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          } else {
+                            Provider.of<RecipesRepositoryFirebase>(
+                              context,
+                              listen: false,
+                            ).createRecipe(recipe);
+                            Navigator.pop(context);
+                          }
                         }
                       },
                       icon: Icon(
