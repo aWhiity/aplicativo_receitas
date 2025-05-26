@@ -1,3 +1,4 @@
+import 'package:aplicativo_receitas/repositories/firebase/favorites_repository_firebase.dart';
 import 'package:aplicativo_receitas/repositories/firebase/recipes_repository_firebase.dart';
 import 'package:aplicativo_receitas/repositories/memory/favorites_repository_memory.dart';
 import 'package:aplicativo_receitas/repositories/memory/recipes_repository_memory.dart';
@@ -17,8 +18,8 @@ Future<void> main() async {
         ChangeNotifierProvider<RecipesRepositoryFirebase>(
           create: (context) => RecipesRepositoryFirebase(),
         ),
-        ChangeNotifierProvider<FavoritesRepositoryMemory>(
-          create: (context) => FavoritesRepositoryMemory(),
+        ChangeNotifierProvider<FavoritesRepositoryFirebase>(
+          create: (context) => FavoritesRepositoryFirebase(),
         ),
       ],
       child: MeuAplicativo(),
