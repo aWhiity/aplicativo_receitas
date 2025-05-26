@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 abstract class FavoritesRepository extends ChangeNotifier {
   List<Recipe> get recipes;
-
-  void addFavorite(Recipe recipe);
-  void removeFavorite(Recipe recipe);
+  Future<void> toggleFavorite(Recipe recipe, bool isFavorite);
+  //Stream<List<Recipe>> getFavoriteRecipes();
 }
