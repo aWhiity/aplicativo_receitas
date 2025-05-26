@@ -528,59 +528,153 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
-                    SizedBox(height: 15),
-                    TextButton.icon(
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          if (counter <= 0) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Adicione pelo menos um ingrediente.',
-                                ),
-                                backgroundColor: Color(0xfff55f54),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Visibility(
+                          visible: widget.isEditing,
+                          child: TextButton.icon(
+                            onPressed: () {
+                              if (widget.isEditing) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Confirmar exclusão'),
+                                      content: Text(
+                                        'Tem certeza que deseja excluir esta receita?',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          child: Text('Cancelar'),
+                                          onPressed: () {
+                                            Navigator.of(
+                                              context,
+                                            ).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text(
+                                            'Excluir',
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                255,
+                                                213,
+                                                60,
+                                                60,
+                                              ),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Provider.of<
+                                              RecipesRepositoryFirebase
+                                            >(
+                                              context,
+                                              listen: false,
+                                            ).deleteRecipe(
+                                              widget.recipeToEdit!,
+                                              //O ! é para confirmar que recipeToEdit nunca será null
+                                            );
+                                            Navigator.of(
+                                              context,
+                                            ).pop(); 
+                                            Navigator.pop(
+                                              context,
+                                            );
+                                            Navigator.pop(
+                                              context,
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            icon: Icon(
+                              Icons.close,
+                              size: 25,
+                              color: Color.fromARGB(255, 213, 60, 60),
+                            ),
+                            label: Text(
+                              'Excluir',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 213, 60, 60),
                               ),
-                            );
-
-                            return;
-                          }
-                          Recipe recipe = createNewRecipe();
-
-                          if (widget.isEditing) {
-                            Provider.of<RecipesRepositoryFirebase>(
-                              context,
-                              listen: false,
-                            ).editRecipe(recipe);
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          } else {
-                            Provider.of<RecipesRepositoryFirebase>(
-                              context,
-                              listen: false,
-                            ).createRecipe(recipe);
-                            Navigator.pop(context);
-                          }
-                        }
-                      },
-                      icon: Icon(
-                        Icons.check,
-                        size: 25,
-                        color: Color(0xfff7f7f7),
-                      ),
-                      label: Text(
-                        'Salvar',
-                        style: TextStyle(color: Color(0xfff7f7f7)),
-                      ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.lightGreen,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 1,
+                            ),
+                            style: TextButton.styleFrom(
+                              fixedSize: Size(110, 15),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 1,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: BorderSide(
+                                  color: Color.fromARGB(255, 213, 60, 60),
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        TextButton.icon(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              if (counter <= 0) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Adicione pelo menos um ingrediente.',
+                                    ),
+                                    backgroundColor: Color(0xfff55f54),
+                                  ),
+                                );
+
+                                return;
+                              }
+                              Recipe recipe = createNewRecipe();
+
+                              if (widget.isEditing) {
+                                Provider.of<RecipesRepositoryFirebase>(
+                                  context,
+                                  listen: false,
+                                ).editRecipe(recipe);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              } else {
+                                Provider.of<RecipesRepositoryFirebase>(
+                                  context,
+                                  listen: false,
+                                ).createRecipe(recipe);
+                                Navigator.pop(context);
+                              }
+                            }
+                          },
+                          icon: Icon(
+                            Icons.check,
+                            size: 25,
+                            color: Color(0xfff7f7f7),
+                          ),
+                          label: Text(
+                            'Salvar',
+                            style: TextStyle(color: Color(0xfff7f7f7)),
+                          ),
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.lightGreen,
+                            fixedSize: Size(120, 15),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 1,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
