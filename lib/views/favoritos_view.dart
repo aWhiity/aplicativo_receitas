@@ -1,3 +1,4 @@
+import 'package:aplicativo_receitas/repositories/firebase/favorites_repository_firebase.dart';
 import 'package:aplicativo_receitas/repositories/memory/favorites_repository_memory.dart';
 import 'package:aplicativo_receitas/utils/format_duration.dart';
 import 'package:aplicativo_receitas/utils/string_extensions.dart';
@@ -10,7 +11,7 @@ class PaginaFavoritos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final favoritesRepository = context.watch<FavoritesRepositoryMemory>();
+    final favoritesRepository = context.watch<FavoritesRepositoryFirebase>();
     final favorites = favoritesRepository.recipes;
 
     if (favorites.isEmpty) {

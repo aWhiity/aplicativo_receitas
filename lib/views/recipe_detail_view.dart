@@ -1,4 +1,5 @@
 import 'package:aplicativo_receitas/models/recipe.dart';
+import 'package:aplicativo_receitas/repositories/firebase/favorites_repository_firebase.dart';
 import 'package:aplicativo_receitas/repositories/firebase/recipes_repository_firebase.dart';
 import 'package:aplicativo_receitas/repositories/memory/favorites_repository_memory.dart';
 import 'package:aplicativo_receitas/utils/format_duration.dart';
@@ -19,9 +20,9 @@ class RecipeDetailsView extends StatefulWidget {
 class _RecipeDetailsViewState extends State<RecipeDetailsView> {
   @override
   Widget build(BuildContext context) {
-    final favoritesRepository = context.watch<FavoritesRepositoryMemory>();
+    final favoritesRepository = context.watch<FavoritesRepositoryFirebase>();
     final favorites = favoritesRepository.recipes;
-    final isFavorite = favorites.contains(widget.recipe);
+    final isFavorite = favorites.any((r) => r.id == widget.recipe.id);
 
     return Scaffold(
       backgroundColor: Color(0xFFe2e2e2),
@@ -105,15 +106,15 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                             IconButton(
                               onPressed: () {
                                 if (isFavorite) {
-                                  Provider.of<FavoritesRepositoryMemory>(
+                                  Provider.of<FavoritesRepositoryFirebase>(
                                     context,
                                     listen: false,
-                                  ).removeFavorite(widget.recipe);
+                                  ).toggleFavorite(widget.recipe, false);
                                 } else {
-                                  Provider.of<FavoritesRepositoryMemory>(
+                                  Provider.of<FavoritesRepositoryFirebase>(
                                     context,
                                     listen: false,
-                                  ).addFavorite(widget.recipe);
+                                  ).toggleFavorite(widget.recipe, true);
                                 }
                               },
                               icon: Icon(
