@@ -1,7 +1,6 @@
 import 'package:aplicativo_receitas/models/recipe.dart';
 import 'package:aplicativo_receitas/repositories/firebase/favorites_repository_firebase.dart';
 import 'package:aplicativo_receitas/repositories/firebase/recipes_repository_firebase.dart';
-import 'package:aplicativo_receitas/repositories/memory/favorites_repository_memory.dart';
 import 'package:aplicativo_receitas/utils/format_duration.dart';
 import 'package:aplicativo_receitas/utils/string_extensions.dart';
 import 'package:aplicativo_receitas/views/add_recipe_view.dart';
