@@ -18,13 +18,13 @@ Aplicativo Flutter para cadastrar, listar, editar e remover receitas culinárias
 ## 🐛 Bugs
 
 - Travamento ao escolher imagem
-- overflow ao editar usuário
-- Erro ao carregar receitas ao delogar e logar novamente
+- Overflow ao editar usuário
+- Erro ao carregar receitas ao deslogar e logar novamente
 
 ## 📵 Funcionalidades faltantes
 
-- exibição de imagem
-- integração a API
+- Exibição de imagem
+- Integração a uma API de um site de receitas
 
 ## 📦 Instalação e execução
 
@@ -100,29 +100,11 @@ Aplicativo Flutter para cadastrar, listar, editar e remover receitas culinárias
     ```bash
     flutter pub get
     ```
-
-6. **Inicialize o Firebase no `main.dart`**
-
-    ```dart
-    void main() async {
-      WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp();
-      runApp(MeuAplicativo());
-    }
-    ```
-
-7. **Execute o projeto**
+6. **Execute o projeto**
 
     ```bash
     flutter run
     ```
 
     Certifique-se de ter um emulador aberto ou dispositivo físico conectado.
-"""
-
-# Caminho para salvar o arquivo
-readme_path = Path("/mnt/data/README.md")
-
-# Salvar o conteúdo no arquivo
-readme_path.write_text(readme_content, encoding="utf-8")
 
