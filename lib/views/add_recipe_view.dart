@@ -210,6 +210,10 @@ class _AddRecipeViewState extends State<AddRecipeView> {
     _instructionsController.text = recipe.instructions;
     _pictureController.text = recipe.imagePath;
 
+    if (recipe.imagePath.isNotEmpty) {
+      _image = File(recipe.imagePath);
+    }
+
     for (int i = 0; i < recipe.ingredients.length; i++) {
       addNewIngredientWidget();
       ingredientNameControllers[i].text = recipe.ingredients[i].name;
@@ -549,9 +553,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                                         TextButton(
                                           child: Text('Cancelar'),
                                           onPressed: () {
-                                            Navigator.of(
-                                              context,
-                                            ).pop();
+                                            Navigator.of(context).pop();
                                           },
                                         ),
                                         TextButton(
@@ -576,15 +578,9 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                                               widget.recipeToEdit!,
                                               //O ! é para confirmar que recipeToEdit nunca será null
                                             );
-                                            Navigator.of(
-                                              context,
-                                            ).pop(); 
-                                            Navigator.pop(
-                                              context,
-                                            );
-                                            Navigator.pop(
-                                              context,
-                                            );
+                                            Navigator.of(context).pop();
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
                                           },
                                         ),
                                       ],
