@@ -9,8 +9,13 @@ import 'package:provider/provider.dart';
 
 class RecipeDetailsView extends StatefulWidget {
   final Recipe recipe;
+  final bool recipeFromApi;
 
-  const RecipeDetailsView({super.key, required this.recipe});
+  const RecipeDetailsView({
+    super.key,
+    required this.recipe,
+    this.recipeFromApi = false,
+  });
 
   @override
   State<RecipeDetailsView> createState() => _RecipeDetailsViewState();
@@ -83,25 +88,46 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => AddRecipeView(
-                                          recipesRepository:
-                                              context
-                                                  .watch<
-                                                    RecipesRepositoryFirebase
-                                                  >(),
-                                          isEditing: true,
-                                          recipeToEdit: widget.recipe,
-                                        ),
-                                  ),
-                                );
+                                if (widget.recipeFromApi) {
+                                  Provider.of<RecipesRepositoryFirebase>(
+                                    context,
+                                    listen: false,
+                                  ).createRecipe(widget.recipe);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Receita adicionada com sucesso!',
+                                      ),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+
+                                  Navigator.pop(context);
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => AddRecipeView(
+                                            recipesRepository: Provider.of<
+                                              RecipesRepositoryFirebase
+                                            >(context, listen: false),
+                                            isEditing: true,
+                                            recipeToEdit: widget.recipe,
+                                          ),
+                                    ),
+                                  );
+                                }
                               },
-                              icon: Icon(Icons.edit_outlined),
+                              icon: Icon(
+                                widget.recipeFromApi
+                                    ? Icons.add_circle_outline
+                                    : Icons.edit_outlined,
+                              ),
                               iconSize: 35,
                             ),
+
                             IconButton(
                               onPressed: () {
                                 if (isFavorite) {
@@ -164,8 +190,13 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                         widget.recipe.ingredients.map((
                                           ingredient,
                                         ) {
+                                          String preposition;
+                                          preposition =
+                                              (ingredient.quantity != "")
+                                                  ? "de"
+                                                  : "";
                                           return Text(
-                                            '• ${ingredient.quantity.capitalizeAllWords()} de ${ingredient.name.capitalizeAllWords()}',
+                                            '• ${ingredient.quantity.capitalizeAllWords()} $preposition ${ingredient.name.capitalizeAllWords()}',
                                             style: TextStyle(fontSize: 16),
                                           );
                                         }).toList(),
