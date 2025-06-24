@@ -46,8 +46,11 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       image: DecorationImage(
-                        image: FileImage(File(widget.recipe.imagePath)),
-                        fit: BoxFit.contain,
+                        image:
+                            widget.recipe.imagePath.startsWith('http')
+                                ? NetworkImage(widget.recipe.imagePath)
+                                : FileImage(File(widget.recipe.imagePath)),
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -185,23 +188,25 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children:
-                                        widget.recipe.ingredients.map((
-                                          ingredient,
-                                        ) {
-                                          String preposition;
-                                          preposition =
-                                              (ingredient.quantity != "")
-                                                  ? "de"
-                                                  : "";
-                                          return Text(
-                                            '• ${ingredient.quantity.capitalizeAllWords()} $preposition ${ingredient.name.capitalizeAllWords()}',
-                                            style: TextStyle(fontSize: 16),
-                                          );
-                                        }).toList(),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children:
+                                          widget.recipe.ingredients.map((
+                                            ingredient,
+                                          ) {
+                                            String preposition;
+                                            preposition =
+                                                (ingredient.quantity != "")
+                                                    ? "de"
+                                                    : "";
+                                            return Text(
+                                              '• ${ingredient.quantity.capitalizeAllWords()} $preposition ${ingredient.name.capitalizeAllWords()}',
+                                              style: TextStyle(fontSize: 16),
+                                            );
+                                          }).toList(),
+                                    ),
                                   ),
                                 ),
                                 Padding(
