@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aplicativo_receitas/models/recipe.dart';
 import 'package:aplicativo_receitas/repositories/firebase/favorites_repository_firebase.dart';
 import 'package:aplicativo_receitas/repositories/firebase/recipes_repository_firebase.dart';
@@ -44,7 +46,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       image: DecorationImage(
-                        image: AssetImage(widget.recipe.imagePath),
+                        image: FileImage(File(widget.recipe.imagePath)),
                         fit: BoxFit.contain,
                       ),
                     ),
