@@ -12,19 +12,15 @@ Aplicativo Flutter para cadastrar, listar, editar e remover receitas culinárias
 - Redefinir senha
 - Excluir perfil
 - Adicionar nova receita
+- Adicionar imagens da galeria
+- Buscar receitas da Internet
 - Listar todas as receitas
 - Favoritar receita
 
 ## 🐛 Bugs
 
-- Travamento ao escolher imagem
 - Overflow ao editar usuário
 - Erro ao carregar receitas ao deslogar e logar novamente
-
-## 📵 Funcionalidades faltantes
-
-- Exibição de imagem
-- Integração a uma API de um site de receitas
 
 ## 📦 Instalação e execução
 
