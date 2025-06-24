@@ -51,10 +51,10 @@ class ReceitasPage extends StatelessWidget {
                   ),
                   SizedBox(width: 5),
                   Text(
-                    formatDuration(
-                      recipe.preparationTime ?? Duration(hours: 0, minutes: 0),
-                    ),
-                    style: TextStyle(color: Colors.grey),
+                    recipe.preparationTime != null
+                        ? formatDuration(recipe.preparationTime!)
+                        : 'Tempo desconhecido',
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
