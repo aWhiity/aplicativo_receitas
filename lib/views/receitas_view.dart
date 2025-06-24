@@ -13,6 +13,20 @@ class ReceitasPage extends StatelessWidget {
   const ReceitasPage({super.key, required this.termoBusca});
 
   Widget _builderImagem(String imagePath) {
+    if (imagePath.startsWith('http')) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.network(
+          imagePath,
+          width: 50,
+          height: 50,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(Icons.broken_image, size: 30, color: Colors.grey);
+          },
+        ),
+      );
+    }
     final file = File(imagePath);
     if (file.existsSync()) {
       return ClipRRect(
@@ -55,7 +69,6 @@ class ReceitasPage extends StatelessWidget {
           return Card(
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ListTile(
-              leading: _builderImagem(recipe.imagePath),
               title: Text(
                 recipe.name.capitalizeAllWords(),
                 style: TextStyle(fontSize: 18),
