@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'views/pagina_inicial_view.dart';
-import 'package:aplicativo_receitas/views/cadastro_usuario_view.dart';
+import 'views/home_view.dart';
+import 'package:aplicativo_receitas/views/register_user_view.dart';
 import 'package:aplicativo_receitas/views/login_view.dart';
-import 'views/perfil_view.dart';
+import 'views/profile_view.dart';
 
 class MeuAplicativo extends StatelessWidget {
   const MeuAplicativo({super.key});
