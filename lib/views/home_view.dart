@@ -1,11 +1,11 @@
 import 'package:aplicativo_receitas/repositories/firebase/recipes_repository_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'favoritos_view.dart';
+import 'favorites_view.dart';
 import 'internet_view.dart';
-import 'perfil_view.dart';
+import 'profile_view.dart';
 import 'add_recipe_view.dart';
-import 'receitas_view.dart';
+import 'recipes_view.dart';
 
 class PaginaInicial extends StatefulWidget {
   const PaginaInicial({super.key});

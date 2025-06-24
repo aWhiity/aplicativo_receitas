@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:aplicativo_receitas/views/pagina_inicial_view.dart';
-import 'package:aplicativo_receitas/views/cadastro_usuario_view.dart';
+import 'package:aplicativo_receitas/views/home_view.dart';
+import 'package:aplicativo_receitas/views/register_user_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
