@@ -1,5 +1,6 @@
 import 'package:aplicativo_receitas/repositories/firebase/favorites_repository_firebase.dart';
 import 'package:aplicativo_receitas/repositories/firebase/recipes_repository_firebase.dart';
+import 'package:aplicativo_receitas/repositories/online_recipes_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicativo_receitas/meu_aplicativo.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,12 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider<FavoritesRepositoryFirebase>(
           create: (context) => FavoritesRepositoryFirebase(),
+        ),
+        Provider<OnlineRecipesRepository>(
+          create:
+              (context) => OnlineRecipesRepository(
+                baseUrl: 'https://api-receitas-pi.vercel.app',
+              ),
         ),
       ],
       child: MeuAplicativo(),

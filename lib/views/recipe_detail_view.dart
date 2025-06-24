@@ -11,8 +11,13 @@ import 'package:provider/provider.dart';
 
 class RecipeDetailsView extends StatefulWidget {
   final Recipe recipe;
+  final bool recipeFromApi;
 
-  const RecipeDetailsView({super.key, required this.recipe});
+  const RecipeDetailsView({
+    super.key,
+    required this.recipe,
+    this.recipeFromApi = false,
+  });
 
   @override
   State<RecipeDetailsView> createState() => _RecipeDetailsViewState();
@@ -41,8 +46,11 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       image: DecorationImage(
-                        image: FileImage(File(widget.recipe.imagePath)),
-                        fit: BoxFit.contain,
+                        image:
+                            widget.recipe.imagePath.startsWith('http')
+                                ? NetworkImage(widget.recipe.imagePath)
+                                : FileImage(File(widget.recipe.imagePath)),
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -85,46 +93,70 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => AddRecipeView(
-                                          recipesRepository:
-                                              context
-                                                  .watch<
-                                                    RecipesRepositoryFirebase
-                                                  >(),
-                                          isEditing: true,
-                                          recipeToEdit: widget.recipe,
-                                        ),
-                                  ),
-                                );
-                              },
-                              icon: Icon(Icons.edit_outlined),
-                              iconSize: 35,
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                if (isFavorite) {
-                                  Provider.of<FavoritesRepositoryFirebase>(
+                                if (widget.recipeFromApi) {
+                                  Provider.of<RecipesRepositoryFirebase>(
                                     context,
                                     listen: false,
-                                  ).toggleFavorite(widget.recipe, false);
+                                  ).createRecipe(widget.recipe);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Receita adicionada com sucesso!',
+                                      ),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+
+                                  Navigator.pop(context);
                                 } else {
-                                  Provider.of<FavoritesRepositoryFirebase>(
+                                  Navigator.push(
                                     context,
-                                    listen: false,
-                                  ).toggleFavorite(widget.recipe, true);
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => AddRecipeView(
+                                            recipesRepository: Provider.of<
+                                              RecipesRepositoryFirebase
+                                            >(context, listen: false),
+                                            isEditing: true,
+                                            recipeToEdit: widget.recipe,
+                                          ),
+                                    ),
+                                  );
                                 }
                               },
                               icon: Icon(
-                                isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: isFavorite ? Colors.red : Colors.black,
+                                widget.recipeFromApi
+                                    ? Icons.add_circle_outline
+                                    : Icons.edit_outlined,
                               ),
                               iconSize: 35,
+                            ),
+
+                            Visibility(
+                              visible: !widget.recipeFromApi,
+                              child: IconButton(
+                                onPressed: () {
+                                  if (isFavorite) {
+                                    Provider.of<FavoritesRepositoryFirebase>(
+                                      context,
+                                      listen: false,
+                                    ).toggleFavorite(widget.recipe, false);
+                                  } else {
+                                    Provider.of<FavoritesRepositoryFirebase>(
+                                      context,
+                                      listen: false,
+                                    ).toggleFavorite(widget.recipe, true);
+                                  }
+                                },
+                                icon: Icon(
+                                  isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: isFavorite ? Colors.red : Colors.black,
+                                ),
+                                iconSize: 35,
+                              ),
                             ),
                           ],
                         ),
@@ -159,18 +191,25 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children:
-                                        widget.recipe.ingredients.map((
-                                          ingredient,
-                                        ) {
-                                          return Text(
-                                            '• ${ingredient.quantity.capitalizeAllWords()} de ${ingredient.name.capitalizeAllWords()}',
-                                            style: TextStyle(fontSize: 16),
-                                          );
-                                        }).toList(),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children:
+                                          widget.recipe.ingredients.map((
+                                            ingredient,
+                                          ) {
+                                            String preposition;
+                                            preposition =
+                                                (ingredient.quantity != "")
+                                                    ? "de"
+                                                    : "";
+                                            return Text(
+                                              '• ${ingredient.quantity.capitalizeAllWords()} $preposition ${ingredient.name.capitalizeAllWords()}',
+                                              style: TextStyle(fontSize: 16),
+                                            );
+                                          }).toList(),
+                                    ),
                                   ),
                                 ),
                                 Padding(

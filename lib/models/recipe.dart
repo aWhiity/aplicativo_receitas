@@ -1,4 +1,5 @@
 import 'package:aplicativo_receitas/models/recipe_ingredient.dart';
+import 'package:uuid/uuid.dart';
 
 class Recipe {
   final String id;
@@ -49,6 +50,28 @@ class Recipe {
       instructions: map['instructions'],
       imagePath: map['imagePath'],
       isFav: map['isFav'] ?? false,
+    );
+  }
+
+  factory Recipe.recipeFromApi(Map<String, dynamic> apiData) {
+    final ingredientesString = apiData['ingredientes'] as String? ?? '';
+    final ingredientesList =
+        ingredientesString.split(',').map((e) => e.trim()).toList();
+
+    return Recipe(
+      id: apiData['id'].toString(),
+      name: apiData['receita'] ?? '',
+      desc: '',
+      ingredients:
+          ingredientesList
+              .map(
+                (item) => RecipeIngredient(name: item, quantity: ''),
+              ) // quantity vazia, pois API não detalha
+              .toList(),
+      preparationTime: null, // Essa API não traz tempo, pode deixar null
+      instructions: apiData['modo_preparo'] ?? '',
+      imagePath: apiData['link_imagem'] ?? 'assets/images/default.png',
+      isFav: false,
     );
   }
 }
