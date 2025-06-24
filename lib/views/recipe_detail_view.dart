@@ -133,27 +133,30 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                               iconSize: 35,
                             ),
 
-                            IconButton(
-                              onPressed: () {
-                                if (isFavorite) {
-                                  Provider.of<FavoritesRepositoryFirebase>(
-                                    context,
-                                    listen: false,
-                                  ).toggleFavorite(widget.recipe, false);
-                                } else {
-                                  Provider.of<FavoritesRepositoryFirebase>(
-                                    context,
-                                    listen: false,
-                                  ).toggleFavorite(widget.recipe, true);
-                                }
-                              },
-                              icon: Icon(
-                                isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: isFavorite ? Colors.red : Colors.black,
+                            Visibility(
+                              visible: !widget.recipeFromApi,
+                              child: IconButton(
+                                onPressed: () {
+                                  if (isFavorite) {
+                                    Provider.of<FavoritesRepositoryFirebase>(
+                                      context,
+                                      listen: false,
+                                    ).toggleFavorite(widget.recipe, false);
+                                  } else {
+                                    Provider.of<FavoritesRepositoryFirebase>(
+                                      context,
+                                      listen: false,
+                                    ).toggleFavorite(widget.recipe, true);
+                                  }
+                                },
+                                icon: Icon(
+                                  isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: isFavorite ? Colors.red : Colors.black,
+                                ),
+                                iconSize: 35,
                               ),
-                              iconSize: 35,
                             ),
                           ],
                         ),
