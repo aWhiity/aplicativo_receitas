@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aplicativo_receitas/repositories/firebase/favorites_repository_firebase.dart';
 import 'package:aplicativo_receitas/utils/format_duration.dart';
 import 'package:aplicativo_receitas/utils/string_extensions.dart';
@@ -7,6 +9,28 @@ import 'package:provider/provider.dart';
 
 class PaginaFavoritos extends StatelessWidget {
   const PaginaFavoritos({super.key});
+
+Widget _builderImagem(String imagePath) {
+  final file = File(imagePath);
+  if (file.existsSync()) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Image.file(
+        file,
+        width: 50,
+        height: 50,
+        fit: BoxFit.cover,
+      ),
+    );
+  } else {
+    return Icon(
+      Icons.photo_size_select_actual_rounded,
+      size: 30,
+      color: Colors.grey,
+    );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +69,7 @@ class PaginaFavoritos extends StatelessWidget {
                   ),
                 ],
               ),
-              trailing: Image.asset(recipe.imagePath),
+              trailing: _builderImagem(recipe.imagePath),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
